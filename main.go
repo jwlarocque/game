@@ -24,7 +24,11 @@ func update(screen *ebiten.Image) error {
 		return nil
 	}
 
-	ebitenutil.DebugPrint(screen, "Hello, World!")
+	isJumping := "not jumping"
+	if player.IsJumping() {
+		isJumping = "jumping!"
+	}
+	ebitenutil.DebugPrint(screen, isJumping)
 	screen.DrawImage(player.GetImage(), player.GetRenderOpts())
 
 	return nil
@@ -45,6 +49,8 @@ func main() {
 	log.Print(gameMap)
 
 	player = &Player{
+		false,
+		time.Now(),
 		engine.Orientation{},
 		engine.Entity{
 			Position:     engine.Vector2{X: 64.0, Y: 64.0},
