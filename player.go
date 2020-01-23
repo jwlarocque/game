@@ -3,8 +3,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"math"
 	"time"
 
@@ -48,8 +46,6 @@ func (p *Player) Update() {
 		p.Velocity.Y = 0
 	}
 	p.Velocity = p.getInputVelocity()
-	log.Print(p.Velocity)
-	log.Print("")
 	p.Velocity.Y += gravity
 	p.Position = p.Position.Add(p.Velocity)
 
@@ -119,8 +115,6 @@ func (p *Player) getInputVelocity() engine.Vector2 {
 		}
 	}
 
-	log.Print(fmt.Sprintf("X: %.6f", inputAccelX))
-	log.Print(newVelocity)
 	return newVelocity
 }
 

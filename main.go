@@ -7,14 +7,14 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 
-	"github.com/lafriks/go-tiled"
-
 	"github.com/jwlarocque/engine"
+	"github.com/jwlarocque/engine/tiled"
 )
 
-const mapPath = "resources/levels/test_map.tmx"
+const mapPath = "resources/maps/test_map.tmx"
 
 var player *Player
+var tileset *tiled.Tileset
 
 func update(screen *ebiten.Image) error {
 	// TODO: state update here
@@ -30,6 +30,7 @@ func update(screen *ebiten.Image) error {
 	}
 	ebitenutil.DebugPrint(screen, isJumping)
 	screen.DrawImage(player.GetImage(), player.GetRenderOpts())
+	screen.DrawImage(tileset.TilesImage, &ebiten.DrawImageOptions{})
 
 	return nil
 }
@@ -40,13 +41,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gameMap, err := tiled.LoadFromFile(mapPath)
-
-	if err != nil {
-		log.Fatal("Error parsing map")
-	}
-
-	log.Print(gameMap)
+	tileset = tiled.NewTilesetFromFile("resources/tiles/cavesofgallet_tiles.tsx")
 
 	player = &Player{
 		false,
