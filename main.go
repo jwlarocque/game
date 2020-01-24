@@ -14,7 +14,7 @@ import (
 const mapPath = "resources/maps/test_map.tmx"
 
 var player *Player
-var tileset *tiled.Tileset
+var levelMap *tiled.Map
 
 func update(screen *ebiten.Image) error {
 	// TODO: state update here
@@ -30,7 +30,7 @@ func update(screen *ebiten.Image) error {
 	}
 	ebitenutil.DebugPrint(screen, isJumping)
 	screen.DrawImage(player.GetImage(), player.GetRenderOpts())
-	screen.DrawImage(tileset.TilesImage, &ebiten.DrawImageOptions{})
+	screen.DrawImage(levelMap.Image, &ebiten.DrawImageOptions{})
 
 	return nil
 }
@@ -41,7 +41,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tileset = tiled.NewTilesetFromFile("resources/tiles/cavesofgallet_tiles.tsx")
+	//tileset = tiled.NewTilesetFromFile("resources/tiles/cavesofgallet_tiles.tsx")
+	levelMap = tiled.NewMapFromFile("resources/maps/test_map.tmx")
 
 	player = &Player{
 		false,
