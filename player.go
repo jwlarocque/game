@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	drag          = 0.85
+	drag          = 0.8
 	playerAccel   = 1.0
 	velocityLimit = 1.0 // TODO: rename this, only applies to input
 	stickTheshold = 0.2
-	gravity       = 0.35
+	gravity       = 0.3
 
 	keyJump      = ebiten.KeyW
 	keyMoveLeft  = ebiten.KeyA
@@ -23,10 +23,11 @@ const (
 )
 
 type Player struct {
-	jumping     bool
-	jumpTime    time.Time
-	orientation engine.Orientation
-	engine.Entity
+	jumping        bool
+	jumpTime       time.Time
+	CurrentState   int
+	ImageProviders map[int]engine.ImageProvider
+	engine.Situation
 }
 
 // TODO: write a player constructor to fill in defaults
@@ -39,6 +40,7 @@ const (
 	walk
 )
 
+// TODO: decouple from framerate
 func (p *Player) Update() {
 	p.Velocity = p.Velocity.Scale(drag)
 	if p.Velocity.Magnitude() < stickTheshold {
@@ -65,11 +67,15 @@ func (p *Player) Update() {
 	}
 }
 
+func (p Player) GetImage() *ebiten.Image {
+	return p.ImageProviders[p.CurrentState].GetImage()
+}
+
 // TODO: this really should be in the engine package?
 // GetRenderOpts provides the transforms on the entity's image (position, orientation, etc.)
 func (p Player) GetRenderOpts() *ebiten.DrawImageOptions {
 	opts := ebiten.DrawImageOptions{}
-	if p.orientation.Horizontal {
+	if p.HorizFlip {
 		opts.GeoM.Scale(-1, 1)
 		imageWidth, _ := p.GetImage().Size()
 		opts.GeoM.Translate(float64(imageWidth), 0)
@@ -92,9 +98,9 @@ func (p *Player) getInputVelocity() engine.Vector2 {
 
 	// set player orientation
 	if inputAccelX < 0 {
-		p.orientation.Horizontal = true
+		p.HorizFlip = true
 	} else if inputAccelX > 0 {
-		p.orientation.Horizontal = false
+		p.HorizFlip = false
 	}
 
 	// add inputAccelX to velocity
@@ -111,7 +117,7 @@ func (p *Player) getInputVelocity() engine.Vector2 {
 		if !p.jumping {
 			p.jumpTime = time.Now()
 			p.jumping = true
-			newVelocity.Y -= 5.0
+			newVelocity.Y -= 8.0
 		}
 	}
 
