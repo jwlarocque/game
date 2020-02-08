@@ -8,6 +8,8 @@ import (
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 
 	"github.com/jwlarocque/engine"
+	"github.com/jwlarocque/engine/mechanism"
+	"github.com/jwlarocque/engine/r2"
 	"github.com/jwlarocque/engine/tiled"
 )
 
@@ -43,7 +45,7 @@ func main() {
 	}
 
 	//tileset = tiled.NewTilesetFromFile("resources/tiles/cavesofgallet_tiles.tsx")
-	levelMap = tiled.NewMapFromFile("resources/maps/test_map.tmx")
+	levelMap = tiled.NewMapFromJSON("resources/maps/test_map.json")
 	mapImageOpts = &ebiten.DrawImageOptions{}
 	mapImageOpts.GeoM.Scale(2.0, 2.0)
 
@@ -54,9 +56,10 @@ func main() {
 		map[int]engine.ImageProvider{
 			0: engine.NewAnimationFromFolder("resources/entities/player/Idle", frameDuration),
 			1: engine.NewAnimationFromFolder("resources/entities/player/Walk", frameDuration)},
-		engine.Situation{
-			Position: engine.Vector2{X: 64.0, Y: 64.0},
-			Velocity: engine.Vector2{X: 0.0, Y: 0.0}}}
+		engine.Orientation{},
+		mechanism.Collider{
+			Position: r2.Vector{X: 64.0, Y: 64.0},
+			Velocity: r2.Vector{X: 0.0, Y: 0.0}}}
 
 	if err := ebiten.Run(update, 400, 240, 2, "Hello, World!"); err != nil {
 		log.Fatal(err)

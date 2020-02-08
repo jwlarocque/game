@@ -8,6 +8,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/jwlarocque/engine"
+	"github.com/jwlarocque/engine/mechanism"
+	"github.com/jwlarocque/engine/r2"
 )
 
 const (
@@ -27,7 +29,8 @@ type Player struct {
 	jumpTime       time.Time
 	CurrentState   int
 	ImageProviders map[int]engine.ImageProvider
-	engine.Situation
+	engine.Orientation
+	mechanism.Collider
 }
 
 // TODO: write a player constructor to fill in defaults
@@ -85,8 +88,8 @@ func (p Player) GetRenderOpts() *ebiten.DrawImageOptions {
 }
 
 // TODO: move this to its own file
-func (p *Player) getInputVelocity() engine.Vector2 {
-	newVelocity := engine.Vector2{p.Velocity.X, p.Velocity.Y}
+func (p *Player) getInputVelocity() r2.Vector {
+	newVelocity := r2.Vector{p.Velocity.X, p.Velocity.Y}
 
 	inputAccelX := 0.0
 	if ebiten.IsKeyPressed(keyMoveLeft) {
